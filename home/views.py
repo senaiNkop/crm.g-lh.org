@@ -21,6 +21,7 @@ from church_work.models import ChurchWork
 from evangelism.models import Evangelism
 
 from users.models import Catalog, Shepherd, SubShepherd, CustomUser
+from users.my_models.users import GENOTYPE_CHOICES, BLOOD_GROUP_CHOICES
 
 
 developers = "God's Lighthouse Developers Team (GDevT)"
@@ -90,6 +91,9 @@ class Profile(LoginRequiredMixin, TemplateView):
 
         context['shepherd'] = Shepherd.objects.all().exclude(name=self.request.user)
         context['sub_shepherd'] = SubShepherd.objects.all().exclude(name=self.request.user)
+
+        context['genotype'] = GENOTYPE_CHOICES
+        context['blood_group'] = BLOOD_GROUP_CHOICES
 
         return context
 
@@ -173,12 +177,16 @@ class Profile(LoginRequiredMixin, TemplateView):
                 shepherd = get_user_model().objects.get(username=request.POST['shepherd'])
                 shepherd = Shepherd.objects.get(name=shepherd)
                 user.shepherd = shepherd
+            else:
+                user.shepherd = None
 
             sub_shepherd = request.POST['sub_shepherd'].strip()
             if sub_shepherd:
                 sub_shepherd = get_user_model().objects.get(username=request.POST['sub_shepherd'])
                 sub_shepherd = SubShepherd.objects.get(name=sub_shepherd)
                 user.sub_shepherd = sub_shepherd
+            else:
+                user.sub_shepherd = None
 
             # SPECIAL KNOWLEDGE
             user.shoe_size = request.POST['shoe_size']

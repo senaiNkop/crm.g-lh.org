@@ -102,7 +102,7 @@ class ShepherdAdmin(admin.ModelAdmin):
 @admin.register(SubShepherd)
 class SubShepherdAdmin(admin.ModelAdmin):
     list_display = ('name', 'get_subshepherd_gender', 'no_of_sheep',
-                    'calling', 'get_service_duration', 'shepherd')
+                    'calling', 'get_service_duration',)
     list_filter = ('calling', 'date_of_appointment')
     date_hierarchy = 'date_of_appointment'
 

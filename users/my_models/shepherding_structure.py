@@ -59,7 +59,6 @@ class Shepherd(models.Model):
 
 class SubShepherd(models.Model):
     name = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, to_field='username')
-    shepherd = models.ForeignKey(Shepherd, on_delete=models.SET_NULL, null=True, blank=True, to_field='name')
     no_of_sheep = models.IntegerField()
     date_of_appointment = models.DateField(validators=[Validators.validate_prevent_future_date])
     calling = models.CharField(max_length=15, choices=Calling)

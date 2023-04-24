@@ -191,14 +191,22 @@
                                    <fieldset id="basic_medic_information" class="row">
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="blood_group">Blood Group:</label>
-                                           <input type="text" class="form-control" id="blood_group" name="blood_group" placeholder="Blood Group" value="{{ user.blood_group|empty_space_if_none }}">
+                                           <select name="blood_group" id="blood_group" class="form-select mb-3">
+                                               {% for option in blood_group %}
+                                                   <option value="{{ option.0 }}" {% if option.0 == user.blood_group %}selected{% endif %}>{{ option.1 }}</option>
+                                               {% endfor %}
+                                           </select>
                                        </div>
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="genotype">Genotype:</label>
-                                           <input type="text" class="form-control" id="genotype" name="genotype" placeholder="e.g. A+" value="{{ user.genotype|empty_space_if_none }}">
+                                           <select name="genotype" id="genotype" class="form-select mb-3">
+                                               {% for option in genotype %}
+                                                   <option value="{{ option.0 }}" {% if option.0 == user.genotype %}selected{% endif %}>{{ option.1 }}</option>
+                                               {% endfor %}
+                                           </select>
                                        </div>
                                        <div class="form-group col-md-12">
-                                           <label class="form-label" for="chronic_illness">Chronic illness:</label>
+                                           <label class="form-label" for="chronic_illness">Chronic illness <small><i>(leave blank if you don't have any)</i></small>:</label>
                                            <input type="text" class="form-control" id="chronic_illness" name="chronic_illness" value="{{ user.chronic_illness|empty_space_if_none }}">
                                        </div>
                                    </fieldset>
@@ -224,7 +232,7 @@
                                    <fieldset id="origin_information" class="row">
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="lga">LGA:</label>
-                                           <input type="text" class="form-control" id="lga" name="lga" placeholder="LGA" value="{{ user.lga|empty_space_if_none }}">
+                                           <input type="text" class="form-control" id="lga" name="lga" placeholder="e.g. Ikono" value="{{ user.lga|empty_space_if_none }}">
                                        </div>
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="state">State:</label>
@@ -261,11 +269,11 @@
                                        </div>
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="years_of_study">Years of Study:</label>
-                                           <input type="number" min="1" max="15" class="form-control" id="years_of_study" name="years_of_study" value="{{ user.years_of_study|empty_space_if_none }}">
+                                           <input type="number" min="1" max="10" class="form-control" id="years_of_study" name="years_of_study" value="{{ user.years_of_study|empty_space_if_none }}">
                                        </div>
                                        <div class="form-group col-md-12">
                                            <label class="form-label" for="current_year_of_study">Current Year of Study:</label>
-                                           <input type="number" min="1" max="15" class="form-control" id="current_year_of_study" name="current_year_of_study" value="{{ user.current_year_of_study|empty_space_if_none }}">
+                                           <input type="number" min="1" max="10" class="form-control" id="current_year_of_study" name="current_year_of_study" value="{{ user.current_year_of_study|empty_space_if_none }}">
                                        </div>
                                        <div class="form-group col-md-12">
                                            <label class="form-label" for="final_year_status">Final Year Status <i><small>(Update when appropriate)</small></i>:</label>

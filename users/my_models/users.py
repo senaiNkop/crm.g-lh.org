@@ -19,9 +19,18 @@ SEX_CHOICES = (
 
 BLOOD_GROUP_CHOICES = (
     ('-', 'Unknown'),
+    ('A+', 'A+'),
+    ('B+', 'B+'),
+    ('O+', 'O+'),
+)
+
+
+GENOTYPE_CHOICES = (
+    ('-', 'Unknown'),
     ('AA', 'AA'),
-    ('BB', 'BB'),
-    ('CC', 'CC'),
+    ('AB', 'AB'),
+    ('AS', 'AS'),
+    ('SS', 'SS'),
 )
 
 
@@ -79,7 +88,7 @@ class CustomUser(AbstractUser):
 
     # BASIC MEDICAL INFORMATION
     blood_group = models.CharField(_("Blood Group"), max_length=10, choices=BLOOD_GROUP_CHOICES)
-    genotype = models.CharField(_("Genotype"), max_length=10, choices=BLOOD_GROUP_CHOICES)
+    genotype = models.CharField(_("Genotype"), max_length=10, choices=GENOTYPE_CHOICES)
     chronic_illness = models.CharField(_("Any Chronic Ailment"), max_length=100, help_text="please specify", blank=True, null=True)
 
     # RESIDENTIAL INFORMATION
