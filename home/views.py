@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 
@@ -20,9 +19,8 @@ from personal_development.models import BibleReading, PrayerMarathon
 from church_work.models import ChurchWork
 from evangelism.models import Evangelism
 
-from users.models import Catalog, Shepherd, SubShepherd, CustomUser
+from users.models import Catalog, Shepherd, SubShepherd, CustomUser, Permission
 from users.my_models.users import GENOTYPE_CHOICES, BLOOD_GROUP_CHOICES
-
 
 developers = "God's Lighthouse Developers Team (GDevT)"
 title = 'GLH-FAM'
@@ -30,7 +28,6 @@ title = 'GLH-FAM'
 days = {
     'Mon': 0, 'Tue': 1, 'Wed': 2, 'Thu': 3, 'Fri': 4, 'Sat': 5, 'Sun': 6
 }
-
 
 months = {
     'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
@@ -63,16 +60,22 @@ class Home(LoginRequiredMixin, TemplateView):
         context['title'] = title
         context['recent_activity'] = recent
 
-        member_schedule = FamilyMemberWeeklySchedule.objects.get(username=self.request.user)
-        week_one = member_schedule.weekone
-        week_two = member_schedule.weektwo
-        week_three = member_schedule.weekthree
-        week_four = member_schedule.weekfour
+        try:
+            member_schedule = FamilyMemberWeeklySchedule.objects.get(username=self.request.user)
+        except FamilyMemberWeeklySchedule.DoesNotExist:
+            context['member_schedule'] = False
+        else:
+            context['member_schedule'] = True
 
-        context['week_one'] = week_one
-        context['week_two'] = week_two
-        context['week_three'] = week_three
-        context['week_four'] = week_four
+            week_one = member_schedule.weekone
+            week_two = member_schedule.weektwo
+            week_three = member_schedule.weekthree
+            week_four = member_schedule.weekfour
+
+            context['week_one'] = week_one
+            context['week_two'] = week_two
+            context['week_three'] = week_three
+            context['week_four'] = week_four
 
         return context
 
@@ -243,7 +246,7 @@ class CatalogView(LoginRequiredMixin, TemplateView):
 
         search_text = request.POST['search_text']
 
-        results = Catalog.objects.filter(things_spoken_about__contains=search_text)
+        results = Catalog.objects.filter(things_spoken_about__icontains=search_text)
         context['results'] = results
         context['no_of_results'] = len(results)
         context['search_text'] = search_text
@@ -267,7 +270,7 @@ class Registration(TemplateView):
         first_name = request.POST['first_name']
         surname = request.POST['last_name']
         username = request.POST['username']
-        sex = request.POST['sex']
+        gender = request.POST['gender']
         password = request.POST['password']
 
         email = request.POST['email']
@@ -275,13 +278,13 @@ class Registration(TemplateView):
         address = request.POST['address']
         occupation = request.POST['occupation']
 
-        users = get_user_model().objects.create_user(email=email, password=password, save=False,
-                                             first_name=first_name, last_name=surname,
-                                             username=username, sex=sex, phone_number=phone_number,
-                                             address=address, occupation=occupation)
+        user = get_user_model().objects.create_user(email=email, password=password, save=False,
+                                                     first_name=first_name, last_name=surname,
+                                                     username=username, gender=gender, phone_number=phone_number,
+                                                     address=address, occupation=occupation)
 
         try:
-            users.save()
+            user.save()
         except BaseException as e:
             error = str(e)
             if 'email' in error:
@@ -290,7 +293,13 @@ class Registration(TemplateView):
                 context['error'] = f"This username '{username}' is already taken"
             return self.render_to_response(context)
 
-        login(request, users)
+        # Save the this specific user's permission
+        permissions = Permission(name=user, is_shepherd=False, is_subshepherd=False,
+                                 can_edit_catalog=False, head_of_department=False)
+
+        permissions.save()
+
+        login(request, user)
         return HttpResponseRedirect(reverse_lazy('home'))
 
 
@@ -407,7 +416,8 @@ class ChartBibleReading(LoginRequiredMixin, TemplateView):
                 'no_of_people_prayed', 'no_led_to_christ',
                 'follow_up', 'holy_spirit_baptism'
             ]
-            motivator = Evangelism.objects.filter(username=request.user).values_list('no_of_people_prayed', 'no_led_to_christ',
+            motivator = Evangelism.objects.filter(username=request.user).values_list('no_of_people_prayed',
+                                                                                     'no_led_to_christ',
                                                                                      'follow_up', 'holy_spirit_baptism')
             denominator = 1000
             percent = 100

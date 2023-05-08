@@ -73,7 +73,7 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(_('First Name'), max_length=100)
     last_name = models.CharField(_('Last Name'), max_length=100)
     username = models.CharField(_('Username'), max_length=100, unique=True)
-    gender = models.CharField(_('Sex'), max_length=10, choices=SEX_CHOICES)
+    gender = models.CharField(_('Gender'), max_length=2, choices=SEX_CHOICES)
     date_of_birth = models.DateField(_("Date of Birth"), blank=True, null=True,
                                      validators=[Validators.validate_prevent_future_date])
     about = models.TextField(_("About"), blank=True, null=True)
@@ -142,8 +142,7 @@ class CustomUser(AbstractUser):
             current_age = now.year - self.date_of_birth.year
 
             return current_age
-        else:
-            return None
+        return None
 
     def set_date_of_birth(self, dob):
         dob = Validators.validate_prevent_future_date(value=dob)
@@ -173,6 +172,42 @@ class CustomUser(AbstractUser):
     def set_subshepherd(self, sub_shepherd):
         self.__validate_leader_roles__(sub_shepherd, 'sub')
         self.sub_shepherd = sub_shepherd
+
+    def to_dict(self):
+        data = {
+            'first_name': self.first_name,
+            'surname': self.last_name,
+            'gender': self.gender,
+            'date_of_birth': self.date_of_birth.isoformat(),
+            'phone_number': self.phone_number,
+            'about': self.about,
+            'email': self.email,
+            'occupation': self.occupation,
+            'address': self.address,
+            'skills': self.skills,
+            'blood_group': self.blood_group,
+            'genotype': self.genotype,
+            'chronic_illness': self.chronic_illness,
+
+            'lga': self.lga, 'state': self.state, 'country': self.country,
+
+            'course_of_study': self.course_of_study,
+            'years_of_study': self.years_of_study,
+            'current_year_of_study': self.current_year_of_study,
+            'final_year_status': self.final_year_status,
+
+            'next_of_kin_full_name': self.next_of_kin_full_name,
+            'next_of_kin_relationship': self.next_of_kin_relationship,
+            'next_of_kin_phone_number': self.next_of_kin_phone_number,
+            'next_of_kin_address': self.next_of_kin_address,
+
+            'gift_graces': self.gift_graces, 'unit_of_work': self.unit_of_work,
+            'shepherd': self.shepherd if self.shepherd else "",
+            'sub_shepherd': self.sub_shepherd if self.shepherd else "",
+
+            'shoe_size': self.shoe_size, 'cloth_size': self.cloth_size,
+        }
+        return data
 
 
 class Permission(models.Model):

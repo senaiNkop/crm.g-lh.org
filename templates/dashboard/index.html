@@ -330,107 +330,109 @@
                </div>
                <div class="col-md-12 col-lg-8">
                   <div class="row">
-                     <div class="col-md-12 col-xl-12">
-                        <div class="card" data-aos="fade-up" data-aos-delay="1000">
-                           <div class="flex-wrap card-header d-flex justify-content-between">
-                              <div class="header-title">
-                                  <h4 class="card-title">Your Weekly Schedule</h4>
-                              </div>
-                           </div>
-                           <div class="card-body">
-                               <div class="accordion" id="accordionExample">
-                                    <div class="accordion-item">
-                                        <h4 class="accordion-header" id="headingOne">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                Week One
-                                            </button>
-                                        </h4>
-                                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <ul>
-                                                    <li>
-                                                        {% if week_one.In %}
-                                                            <b>In: </b>True
-                                                        {% else %}
-                                                            <b>Out: </b>{{ week_one.out.title }}
-                                                        {% endif %}
-                                                    </li>
-                                                    <li><b>Wednesday: </b>{% if week_one.wednesday %}True{% else %}-{% endif %}</li>
-                                                    <li><b>Exception: </b>{% if week_one.exception %}True{% else %}-{% endif %}</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="accordion-item">
-                                        <h4 class="accordion-header" id="headingTwo">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                                Week Two
-                                            </button>
-                                        </h4>
-                                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <ul>
-                                                    <li>
-                                                        {% if week_two.In %}
-                                                            <b>In: </b>True
-                                                        {% else %}
-                                                            <b>Out: </b>{{ week_two.out.title }}
-                                                        {% endif %}
-                                                    </li>
-                                                    <li><b>Wednesday: </b>{% if week_two.wednesday %}True{% else %}-{% endif %}</li>
-                                                    <li><b>Exception: </b>{% if week_two.exception %}True{% else %}-{% endif %}</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="accordion-item">
-                                        <h4 class="accordion-header" id="headingThree">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                                Week Three
-                                            </button>
-                                        </h4>
-                                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <ul>
-                                                    <li>
-                                                        {% if week_three.In %}
-                                                            <b>In: </b>True
-                                                        {% else %}
-                                                            <b>Out: </b>{{ week_three.out.title }}
-                                                        {% endif %}
-                                                    </li>
-                                                    <li><b>Wednesday: </b>{% if week_three.wednesday %}True{% else %}-{% endif %}</li>
-                                                    <li><b>Exception: </b>{% if week_three.exception %}True{% else %}-{% endif %}</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="accordion-item">
-                                        <h4 class="accordion-header" id="headingFour">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                                Week Four
-                                            </button>
-                                        </h4>
-                                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <ul>
-                                                    <li>
-                                                        {% if week_four.In %}
-                                                            <b>In: </b>True
-                                                        {% else %}
-                                                            <b>Out: </b>{{ week_four.out.title }}
-                                                        {% endif %}
-                                                    </li>
-                                                    <li><b>Wednesday: </b>{% if week_four.wednesday %}True{% else %}-{% endif %}</li>
-                                                    <li><b>Exception: </b>{% if week_four.exception %}True{% else %}-{% endif %}</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
+                     {% if member_schedule %}
+                         <div class="col-md-12 col-xl-12">
+                            <div class="card" data-aos="fade-up" data-aos-delay="1000">
+                               <div class="flex-wrap card-header d-flex justify-content-between">
+                                  <div class="header-title">
+                                      <h4 class="card-title">Your Weekly Schedule</h4>
+                                  </div>
                                </div>
-                           </div>
-                        </div>
-                     </div>
+                               <div class="card-body">
+                                   <div class="accordion" id="accordionExample">
+                                        <div class="accordion-item">
+                                            <h4 class="accordion-header" id="headingOne">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    Week One
+                                                </button>
+                                            </h4>
+                                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    <ul>
+                                                        <li>
+                                                            {% if week_one.In %}
+                                                                <b>In: </b>True
+                                                            {% else %}
+                                                                <b>Out: </b>{{ week_one.out.title }}
+                                                            {% endif %}
+                                                        </li>
+                                                        <li><b>Wednesday: </b>{% if week_one.wednesday %}True{% else %}-{% endif %}</li>
+                                                        <li><b>Exception: </b>{% if week_one.exception %}True{% else %}-{% endif %}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h4 class="accordion-header" id="headingTwo">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                    Week Two
+                                                </button>
+                                            </h4>
+                                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    <ul>
+                                                        <li>
+                                                            {% if week_two.In %}
+                                                                <b>In: </b>True
+                                                            {% else %}
+                                                                <b>Out: </b>{{ week_two.out.title }}
+                                                            {% endif %}
+                                                        </li>
+                                                        <li><b>Wednesday: </b>{% if week_two.wednesday %}True{% else %}-{% endif %}</li>
+                                                        <li><b>Exception: </b>{% if week_two.exception %}True{% else %}-{% endif %}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h4 class="accordion-header" id="headingThree">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                    Week Three
+                                                </button>
+                                            </h4>
+                                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    <ul>
+                                                        <li>
+                                                            {% if week_three.In %}
+                                                                <b>In: </b>True
+                                                            {% else %}
+                                                                <b>Out: </b>{{ week_three.out.title }}
+                                                            {% endif %}
+                                                        </li>
+                                                        <li><b>Wednesday: </b>{% if week_three.wednesday %}True{% else %}-{% endif %}</li>
+                                                        <li><b>Exception: </b>{% if week_three.exception %}True{% else %}-{% endif %}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h4 class="accordion-header" id="headingFour">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                                    Week Four
+                                                </button>
+                                            </h4>
+                                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                                <div class="accordion-body">
+                                                    <ul>
+                                                        <li>
+                                                            {% if week_four.In %}
+                                                                <b>In: </b>True
+                                                            {% else %}
+                                                                <b>Out: </b>{{ week_four.out.title }}
+                                                            {% endif %}
+                                                        </li>
+                                                        <li><b>Wednesday: </b>{% if week_four.wednesday %}True{% else %}-{% endif %}</li>
+                                                        <li><b>Exception: </b>{% if week_four.exception %}True{% else %}-{% endif %}</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                   </div>
+                               </div>
+                            </div>
+                         </div>
+                     {% endif %}
 
                      <div class="col-md-12 col-xl-12">
                         <div class="card" data-aos="fade-up" data-aos-delay="1000">
@@ -576,7 +578,7 @@
                            <div class="card-body">
                                {% for item in recent_activity %}
                                    <div class="mb-2  d-flex profile-media align-items-top">
-                                       <div class="mt-1 profile-dots-pills border-primary">{{ forloop.counter }}</div>
+                                       <div class="mt-1 profile-dots-pills border-primary"></div>
                                        <div class="ms-4">
                                            <h6 class="mb-1 ">{{ item.details }}</h6>
                                            <span class="mb-0">{{ item.date|my_date_filter }}</span>

@@ -93,6 +93,8 @@ def upload_catalog_to_database(catalog_path):
     month_re = re.compile('[A-Z]{3,15}')
     year_re = re.compile('[0-9]{4}')
 
+    counter = 0
+
     for index in range(len(df)):
         row = df.iloc[index]
 
@@ -194,7 +196,10 @@ def upload_catalog_to_database(catalog_path):
         except ValidationError:
             continue
         else:
+            counter += 1
             catalog.save()
+
+    return counter
 
 
 
