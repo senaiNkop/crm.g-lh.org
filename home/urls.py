@@ -1,6 +1,6 @@
 from django.urls import path, include
 from .views import (Home, Profile, Registration, Login, logout_user, CounterUpdate,
-                    ChartBibleReading, CatalogView)
+                    ChartBibleReading, CatalogView, TaskView)
 
 
 urlpatterns = [
@@ -9,6 +9,7 @@ urlpatterns = [
     path('users-registration/', Registration.as_view(), name='users-registration'),
     path('users-login/', Login.as_view(), name='users-login'),
     path('users-logout/', logout_user, name='users-logout'),
+    path('users-tasks/', TaskView.as_view(), name='users-task'),
 
     path('personal-development/', include('personal_development.urls')),
     path('church-work/', include('church_work.urls')),
@@ -19,5 +20,6 @@ urlpatterns = [
     path('update-counter/', CounterUpdate.as_view(), name='update-counter'),
     path('update-counter/<str:category>/<str:mode>/', ChartBibleReading.as_view(), name='update-charts'),
 
-    path('hod-report', include('hod_report.urls')),
+    path('hod-report/', include('hod_report.urls')),
+    path('pastoring/', include('pastoring.urls')),
 ]

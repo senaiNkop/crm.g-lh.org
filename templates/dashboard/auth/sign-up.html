@@ -66,14 +66,14 @@
                                    <label for="validationCustom03" class="form-label">Phone Number</label>
                                    <input type="tel" class="form-control" name="phone_number" id="validationCustom03" required>
                                 </div>
-                                <div class="col-md-12">
-                                   <label for="validationCustom03" class="form-label">Address</label>
-                                   <input type="text" class="form-control" name="address" id="validationCustom03" placeholder="e.g. 15 Ikpa Road, Uyo, Akwa Ibom." required>
-                                </div>
-                                <div class="col-md-12">
-                                   <label for="validationCustom03" class="form-label">Occupation</label>
-                                   <input type="text" class="form-control" name="occupation" id="validationCustom03" placeholder="e.g. Teacher" required>
-                                </div>
+{#                                <div class="col-md-12">#}
+{#                                   <label for="validationCustom03" class="form-label">Address</label>#}
+{#                                   <input type="text" class="form-control" name="address" id="validationCustom03" placeholder="e.g. 15 Ikpa Road, Uyo, Akwa Ibom." required>#}
+{#                                </div>#}
+{#                                <div class="col-md-12">#}
+{#                                   <label for="validationCustom03" class="form-label">Occupation</label>#}
+{#                                   <input type="text" class="form-control" name="occupation" id="validationCustom03" placeholder="e.g. Teacher" required>#}
+{#                                </div>#}
                                 <div class="col-12">
                                     <div>
                                         <input class="form-check-input" type="radio" name="gender" value="M" id="male_radio">
@@ -85,6 +85,7 @@
                                 </div>
                                 <div class="col-12">
                                    <button class="btn btn-primary" type="submit">Create Account</button>
+{#                                    <br>#}
                                    <span class="mt-3 text-center" style="margin-left: 20px;">
                                          Already have an Account? <a href="{% url 'users-login' %}" class="text-underline">Sign In</a>
                                    </span>

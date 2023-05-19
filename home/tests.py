@@ -10,9 +10,9 @@ from users.my_models.miscellaneous import upload_catalog_to_database
 class LoginAndRegistrationTest(TestCase):
     def setUp(self) -> None:
         self.login_template_name = 'dashboard/auth/sign-in.html'
-        self.login_url = '/assessment/users-login/'
+        self.login_url = '/users-login/'
 
-        self.registration_url = '/assessment/users-registration/'
+        self.registration_url = '/users-registration/'
         self.registration_template_name = 'dashboard/auth/sign-up.html'
 
         self.user = CustomUser.objects.create_user(email='samueleffiong80@gmail.com', password='Nkopuruk@4',
@@ -25,7 +25,7 @@ class LoginAndRegistrationTest(TestCase):
         self.assertEqual('God\'s Lighthouse Developers Team (GDevT)', response.context_data['developers'])
 
     def test_visitor_is_taken_to_login_page(self):
-        response = self.client.get('/assessment/', follow=True)
+        response = self.client.get('/', follow=True)
         self.assertTemplateUsed(response, self.login_template_name)
         self.assertContains(response, 'Login')
 
@@ -78,7 +78,6 @@ class LoginAndRegistrationTest(TestCase):
                 'first_name': 'Utibe', 'last_name': 'Ettebong',
                 'username': 'Uty', 'email': 'Samueleffiong@gmail.com',
                 'password': 'Nkopurk@4', 'phone_number': '09035018948',
-                'address': 'Itu Road',
                 'gender': 'M'
             }, follow=True)
         except MultiValueDictKeyError:
@@ -89,7 +88,6 @@ class LoginAndRegistrationTest(TestCase):
             'first_name': 'Utibe', 'last_name': 'Ettebong',
             'username': 'Senai', 'email': 'samueleffiong80@gmail.com',
             'password': 'Nkopurk@4', 'phone_number': '09035018948',
-            'address': 'Itu Road', 'occupation': 'Developer',
             'gender': 'M'
         }, follow=True)
 
@@ -104,7 +102,6 @@ class LoginAndRegistrationTest(TestCase):
             'first_name': 'Utibe', 'last_name': 'Ettebong',
             'username': 'Uty', 'email': 'samueleffiong@gmail.com',
             'password': 'Nkopurk@4', 'phone_number': '09035018948',
-            'address': 'Itu Road', 'occupation': 'Developer',
             'gender': 'M',
         }, follow=True)
 
@@ -116,8 +113,7 @@ class LoginAndRegistrationTest(TestCase):
         self.assertEqual(user, response.context_data['user'])
 
         user_permission = Permission.objects.get(name=user)
-        self.assertFalse(user_permission.is_shepherd)
-        self.assertFalse(user_permission.is_subshepherd)
+
         self.assertFalse(user_permission.can_edit_catalog)
         self.assertFalse(user_permission.head_of_department)
 
@@ -125,8 +121,8 @@ class LoginAndRegistrationTest(TestCase):
 class ProfileUpdateTest(TestCase):
     def setUp(self) -> None:
         self.username = 'Uty'
-        self.registration_url = '/assessment/users-registration/'
-        self.profile_url = f'/assessment/{self.username}/users-profile/'
+        self.registration_url = '/users-registration/'
+        self.profile_url = f'/{self.username}/users-profile/'
         self.profile_template_name = 'dashboard/app/user-profile.html'
 
         response = self.client.post(self.registration_url, {
@@ -217,8 +213,8 @@ class ProfileUpdateTest(TestCase):
 
 class CatalogTest(TestCase):
     def setUp(self) -> None:
-        self.registration_url = '/assessment/users-registration/'
-        self.catalog_url = '/assessment/catalog/'
+        self.registration_url = '/users-registration/'
+        self.catalog_url = '/catalog/'
         self.catalog_template_name = 'dashboard/table/catalog_table.html'
 
         response = self.client.post(self.registration_url, {

@@ -42,6 +42,8 @@ class ChurchWork(models.Model):
     details = models.TextField()
     hours_spent = models.IntegerField(default=DEFAULT)
 
+    last_active_date = models.DateField('Last active date', default=timezone.now)
+
     objects = models.Manager()
     data_analysis = DataAnalysisManager()
 

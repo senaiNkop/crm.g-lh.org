@@ -51,11 +51,11 @@ class CustomUserAdmin(UserAdmin):
             'classes': ('collapse',)
         }),
         ('Additional Information', {
-            'fields': ('unit_of_work', 'shepherd', 'sub_shepherd', 'profile_pic'),
+            'fields': ('unit_of_work', 'shepherd', 'sub_shepherd', 'profile_pic', 'last_active_date'),
             'classes': ('collapse',)
         }),
         ('Special Knowledge', {
-            'fields': ('shoe_size', 'cloth_size',),
+            'fields': ('shoe_size', 'cloth_size', 'level'),
             'classes': ('collapse',)
         }),
         ('Permissions', {

@@ -19,15 +19,19 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 from home.views import Home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('assessment/', include('home.urls')),
+    path('', include('home.urls')),
     path('api/', include('api.urls')),
     path('api-auth/', include('rest_framework.urls')),
 
-    path('__debug__/', include('debug_toolbar.urls')),
+    path('auth/', include('djoser.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
+
+    # path('__debug__/', include('debug_toolbar.urls')),
 ]
 
 if settings.DEBUG:

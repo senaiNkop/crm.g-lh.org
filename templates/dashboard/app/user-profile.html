@@ -722,6 +722,25 @@
                      <div class="card-body">
                         <fieldset class="row">
                             <div class="mt-2">
+                                <h6 class="mb-1">Level:</h6>
+                                <p id="displayLevel">
+                                    {% if user.level == 'new_mem' %}
+                                        New Member
+                                    {% elif user.level == 'mem' %}
+                                        Member
+                                    {% elif user.level == 'worker' %}
+                                        Worker
+                                    {% elif user.level == 'sub_shep' %}
+                                        Sub Shepherd
+                                    {% elif user.level == 'core_shep' %}
+                                        Core Shepherd
+                                    {% elif user.level == 'chief_shep' %}
+                                        Chief Shepherd
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            <div class="mt-2">
                                 <h6 class="mb-1">Shoe Size:</h6>
                                 <p id="displayShoeSize">{{ user.shoe_size }}</p>
                             </div>
@@ -778,7 +797,7 @@
 {% block javascript %}
     <script src="{% static 'assets/js/sub_main.js' %}"></script>
     <script>
-        url = "{% url 'users-profile' user.username%}";
+        url = "{% url 'users-profile' user.username %}";
         change_password(url);
         password_validation();
         preview_image();

@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy, resolve
 from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 from .models import ChurchWork
 from home.models import RecentActivity
@@ -59,7 +60,7 @@ class UpdateChurchWorkListView(LoginRequiredMixin, TemplateView):
         church_work = ChurchWork(details=details, work_category=work_category,
                                  hours_spent=int(hours_spent), start_time=start_time,
                                  end_time=end_time, date=datetime.strptime(date, '%m/%d/%Y'),
-                                 username=request.user)
+                                 username=request.user, last_active_date=timezone.now())
         church_work.save()
 
         recent = RecentActivity(username=request.user, category="church_work",
@@ -113,6 +114,7 @@ class UpdateChurchWorkDetailView(LoginRequiredMixin, TemplateView):
         church_work.end_time = time.fromisoformat(end_time)
         church_work.hours_spent = hours_spent
         church_work.date = datetime.strptime(date, '%m/%d/%Y')
+        church_work.last_active_date = timezone.now()
 
         church_work.save()
 

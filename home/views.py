@@ -3,6 +3,7 @@ import numpy as np
 
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect, JsonResponse
+from django.utils import timezone
 
 from django.views.generic.base import TemplateView
 
@@ -12,14 +13,14 @@ from django.contrib.auth import get_user_model
 
 from django.core.exceptions import ValidationError
 
-from users.models import FamilyMemberWeeklySchedule
 from .models import RecentActivity
 
 from personal_development.models import BibleReading, PrayerMarathon
 from church_work.models import ChurchWork
 from evangelism.models import Evangelism
 
-from users.models import Catalog, Shepherd, SubShepherd, CustomUser, Permission
+from users.models import (Catalog, Shepherd, SubShepherd, CustomUser,
+                          Permission, FamilyMemberWeeklySchedule)
 from users.my_models.users import GENOTYPE_CHOICES, BLOOD_GROUP_CHOICES
 
 developers = "God's Lighthouse Developers Team (GDevT)"
@@ -49,6 +50,15 @@ def sort_function(series):
 class Home(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('users-login')
     template_name = 'dashboard/index.html'
+
+    # def setup(self, request, *args, **kwargs):
+    #     super().setup(request, *args, **kwargs)
+    #
+    #     # update the last_active time on the user instance
+    #     user = request.user
+    #
+    #     user.last_active_date = timezone.now()
+    #     user.save()
 
     def get_context_data(self, **kwargs):
         context = super(Home, self).get_context_data(**kwargs)
@@ -254,6 +264,21 @@ class CatalogView(LoginRequiredMixin, TemplateView):
         return self.render_to_response(context)
 
 
+class TaskView(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('users_login')
+    template_name = 'dashboard/special-pages/tasks.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['category'] = 'Task'
+        context['developers'] = developers
+        context['user'] = self.request.user
+        context['title'] = title
+
+        return context
+
+
 class Registration(TemplateView):
     template_name = 'dashboard/auth/sign-up.html'
 
@@ -275,13 +300,11 @@ class Registration(TemplateView):
 
         email = request.POST['email']
         phone_number = request.POST['phone_number']
-        address = request.POST['address']
-        occupation = request.POST['occupation']
 
         user = get_user_model().objects.create_user(email=email, password=password, save=False,
-                                                     first_name=first_name, last_name=surname,
-                                                     username=username, gender=gender, phone_number=phone_number,
-                                                     address=address, occupation=occupation)
+                                                    first_name=first_name, last_name=surname,
+                                                    username=username, gender=gender, phone_number=phone_number
+                                                    )
 
         try:
             user.save()
@@ -294,8 +317,8 @@ class Registration(TemplateView):
             return self.render_to_response(context)
 
         # Save the this specific user's permission
-        permissions = Permission(name=user, is_shepherd=False, is_subshepherd=False,
-                                 can_edit_catalog=False, head_of_department=False)
+        permissions = Permission(name=user, can_edit_catalog=False,
+                                 head_of_department=False)
 
         permissions.save()
 

@@ -28,7 +28,6 @@ class Dashboard(LoginRequiredMixin, TemplateView):
 
         context['day_period'] = datetime.now().strftime('%p')
 
-
         return context
 
 

@@ -5,6 +5,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -20,8 +21,12 @@ SEX_CHOICES = (
 BLOOD_GROUP_CHOICES = (
     ('-', 'Unknown'),
     ('A+', 'A+'),
+    ('A-', 'A-'),
     ('B+', 'B+'),
+    ('B-', 'B-'),
+    ('AB+', 'AB-'),
     ('O+', 'O+'),
+    ('O-', 'O-')
 )
 
 
@@ -29,8 +34,21 @@ GENOTYPE_CHOICES = (
     ('-', 'Unknown'),
     ('AA', 'AA'),
     ('AB', 'AB'),
+    ('AO', 'AO'),
+    ('BB', 'BB'),
+    ('BO', 'BO'),
+    ('OO', 'OO'),
     ('AS', 'AS'),
-    ('SS', 'SS'),
+    ('SS', 'SS')
+)
+
+LEVEL_CHOICES = (
+    ('new_mem', 'New Member'),
+    ('mem', 'Member'),
+    ('worker', 'Worker'),
+    ('sub_shep', 'Sub Shepherd'),
+    ('core_shep', 'Core Shepherd'),
+    ('chief_shep', 'Chief Shepherd')
 )
 
 
@@ -65,6 +83,12 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_("Superuser must have is_superuser=True"))
 
         return self.create_user(email, password, **extra_fields)
+
+    def get_sheep(self, shepherd):
+        return self.get_queryset().filter(shepherd=shepherd)
+
+    def get_sub_sheep(self, sub_shepherd):
+        return self.get_queryset().filter(sub_shepherd=sub_shepherd)
 
 
 class CustomUser(AbstractUser):
@@ -118,9 +142,12 @@ class CustomUser(AbstractUser):
     shepherd = models.ForeignKey('Shepherd', on_delete=models.SET_NULL, blank=True, null=True)
     sub_shepherd = models.ForeignKey('SubShepherd', on_delete=models.SET_NULL, blank=True, null=True)
 
+    last_active_date = models.DateField(_("Last active date"), default=timezone.now)
+
     # SPECIAL KNOWLEDGE
     shoe_size = models.CharField(_("Shoe Size"), max_length=20, blank=True, null=True)
     cloth_size = models.CharField(_("Cloth Size"), max_length=20, blank=True, null=True)
+    level = models.CharField(_('Level'), max_length=15, default='new_mem', choices=LEVEL_CHOICES)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
@@ -212,8 +239,6 @@ class CustomUser(AbstractUser):
 
 class Permission(models.Model):
     name = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, to_field='username')
-    is_shepherd = models.BooleanField(default=False)
-    is_subshepherd = models.BooleanField(default=False)
     can_edit_catalog = models.BooleanField(default=False)
     head_of_department = models.BooleanField(default=False)
 

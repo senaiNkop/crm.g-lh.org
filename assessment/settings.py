@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$$)9)auejpw&6d_p+sw-x)x8gwga^u1it$@p6rk^9e^cs&n&xq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -47,11 +48,15 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'rest_framework.apps.RestFrameworkConfig',
     'rest_framework.authtoken',
+    'djoser',
 
-    'debug_toolbar.apps.DebugToolbarConfig',
+    # 'debug_toolbar.apps.DebugToolbarConfig',
 ]
 
-ALLOWED_HOSTS = []
+if DEBUG:
+    ALLOWED_HOSTS = []
+else:
+    ALLOWED_HOSTS = ["173.82.212.74", 'localhost', 'crm.g-lh.org']
 
 
 # Application definition
@@ -65,7 +70,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'assessment.urls'
@@ -94,22 +99,25 @@ WSGI_APPLICATION = 'assessment.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'GodLighthouse$God_Lighthouse',
-#         'USER': 'GodLighthouse',
-#         'PASSWORD': 'Nkopuruk@4',
-#         'HOST': 'GodLighthouse.mysql.pythonanywhere-services.com',
-#     }
-# }
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'glh_crm',
+            'USER': 'glh_crm_usr',
+            'PASSWORD': '*h5&324-7u9q8wRTGLHdgf',
+            'HOST': 'localhost',
+	    'PORT': '',
+        }
+    }
 
 
 # Password validation
@@ -138,9 +146,9 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Africa/Lagos'
 
-USE_I18N = True
-
-USE_TZ = True
+# USE_I18N = True
+#
+# USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -151,7 +159,7 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
 
-# STATIC_ROOT = '/home/GodLighthouse/assessment/static'
+STATIC_ROOT = BASE_DIR / 'static'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -167,4 +175,28 @@ INTERNAL_IPS = [
 
 REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
+
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework_xml.renderers.XMLRenderer',
+        'rest_framework_yaml.renderers.YAMLRenderer'
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication'
+    ),
+    "DEFAULT_THROTTLE_RATES": {
+        'anon': '3/minute',
+        'user': '5/minute'
+    }
+}
+
+DJOSER = {
+    'USER_ID_FIELD': 'email',
+    'LOGIN_FIELD': 'email'
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10)
 }

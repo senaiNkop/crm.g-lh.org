@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.decorators import action
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import HttpResponseRedirect
@@ -26,12 +28,15 @@ class UserViewSet(ModelViewSet):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
     pagination_class = PageNumberPaginator
+    permission_classes = [IsAuthenticated]
+    throttle_classes = [UserRateThrottle]
 
 
 class ShepherdViewSet(ModelViewSet):
     queryset = Shepherd.objects.select_related('name').all()
     serializer_class = ShepherdSerializer
     pagination_class = PageNumberPaginator
+    throttle_classes = [AnonRateThrottle]
 
     @action(detail=True)
     def user(self, request, *args, **kwargs):
