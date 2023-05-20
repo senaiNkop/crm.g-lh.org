@@ -797,7 +797,7 @@
 {% block javascript %}
     <script src="{% static 'assets/js/sub_main.js' %}"></script>
     <script>
-        url = "{% url 'users-profile' user.username %}";
+        url = "{% url 'users-profiles' user.username %}";
         change_password(url);
         password_validation();
         preview_image();

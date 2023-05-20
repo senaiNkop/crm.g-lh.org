@@ -5,7 +5,7 @@ from .views import (Home, Profile, Registration, Login, logout_user, CounterUpda
 
 urlpatterns = [
     path('', Home.as_view(), name='home'),
-    path('<str:username>/users-profile/', Profile.as_view(), name='users-profile'),
+    path('<str:username>/users-profile/', Profile.as_view(), name='users-profiles'),
     path('users-registration/', Registration.as_view(), name='users-registration'),
     path('users-login/', Login.as_view(), name='users-login'),
     path('users-logout/', logout_user, name='users-logout'),

@@ -11,8 +11,53 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 import os
+import logging
 from pathlib import Path
 from datetime import timedelta
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        "verbose": {
+            "format": "{name} {levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        'simple': {
+            'format': '[%(asctime)s] %(levelname)s %(message)s',
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
+    },
+    'handlers': {
+
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'INFO',
+            'formatter': 'verbose',
+        },
+
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': 'ERROR_REPORT.log',
+            'level': 'ERROR',
+            'formatter': 'verbose',
+        },
+    },
+
+    'loggers': {
+
+        'django': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+        },
+
+        'ERROR_REPORT': {
+            'handlers': ['file', 'console'],
+            'level': 'ERROR',
+        },
+    },
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -101,7 +146,7 @@ WSGI_APPLICATION = 'assessment.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
-if DEBUG:
+if True:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
