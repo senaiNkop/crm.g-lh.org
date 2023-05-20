@@ -15,7 +15,6 @@ import logging
 from pathlib import Path
 from datetime import timedelta
 
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -62,7 +61,6 @@ LOGGING = {
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
@@ -70,14 +68,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-$$)9)auejpw&6d_p+sw-x)x8gwga^u1it$@p6rk^9e^cs&n&xq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    "whitenoise.runserver_nostatic",
     'django.contrib.staticfiles',
+
+    'rest_framework.apps.RestFrameworkConfig',
+    'rest_framework.authtoken',
+    'djoser',
 
     'custom_tags.apps.CustomTagsConfig',
 
@@ -91,33 +95,36 @@ INSTALLED_APPS = [
     'hod_report.apps.HodReportConfig',
 
     'api.apps.ApiConfig',
-    'rest_framework.apps.RestFrameworkConfig',
-    'rest_framework.authtoken',
-    'djoser',
-
-    # 'debug_toolbar.apps.DebugToolbarConfig',
 ]
+
+if DEBUG:
+    INSTALLED_APPS += ['debug_toolbar']
+
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_DOMAIN = '.g-lh.org'
+CSRF_TRUSTED_ORIGINS = ['https://crm.g-lh.org', 'https://g-lh.org']
+CSRF_COOKIE_SECURE = True
 
 if DEBUG:
     ALLOWED_HOSTS = []
 else:
-    ALLOWED_HOSTS = ["173.82.212.74", 'localhost', 'crm.g-lh.org']
-
+    ALLOWED_HOSTS = ['173.82.212.74', 'crm.g-lh.org', 'g-lh.org']
 
 # Application definition
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
 
 ROOT_URLCONF = 'assessment.urls'
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -141,12 +148,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'assessment.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
-if True:
+if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -161,10 +167,9 @@ else:
             'USER': 'glh_crm_usr',
             'PASSWORD': '*h5&324-7u9q8wRTGLHdgf',
             'HOST': 'localhost',
-	    'PORT': '',
+            'PORT': '',
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -183,7 +188,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

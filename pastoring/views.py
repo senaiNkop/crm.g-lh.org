@@ -6,7 +6,8 @@ from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 
-from users.models import Shepherd, SubShepherd
+from users.models import Shepherd, SubShepherd, CustomUser
+from church_work.models import ChurchWork
 
 developers = "God's Lighthouse Developers Team (GDevT)"
 title = 'GLH-FAM'
@@ -72,8 +73,10 @@ class SheepSummaryDetailView(LoginRequiredMixin, TemplateView):
         context['user'] = self.request.user
         context['title'] = title
 
-        sheep = get_user_model().objects.get(username=kwargs['sheep'])
+        sheep: CustomUser = get_user_model().objects.get(username=kwargs['sheep'])
+
         context['sheep'] = sheep
+        context['church_work'] = sheep.churchwork_set.all().order_by('-date')
 
         return context
 
