@@ -92,3 +92,4 @@ urllib3
 virtualenv
 virtualenv-clone
 wsproto
+whitenoise

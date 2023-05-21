@@ -20,7 +20,7 @@ class OutdatedDateField(models.CharField):
 
 class Catalog(models.Model):
     day = models.CharField(max_length=201, null=True, blank=True)
-    date = OutdatedDateField(max_length=30, null=True, blank=True)
+    date = OutdatedDateField(max_length=200, null=True, blank=True)
 
     help_text = """<span style="color:red;">Use this date field to record date instead of the above date field</span>"""
     correct_date = models.DateField(blank=True, null=True,
