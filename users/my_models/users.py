@@ -122,8 +122,8 @@ class CustomUser(AbstractUser):
 
     # SCHOOL INFORMATION
     course_of_study = models.CharField(_("Course of Study"), max_length=255, blank=True, null=True)
-    years_of_study = models.IntegerField(_("No of Years of Study"), blank=True, null=True)
-    current_year_of_study = models.IntegerField(_("Current Year of Study"), blank=True, null=True)
+    years_of_study = models.CharField(_("No of Years of Study"), max_length=20, blank=True, null=True)
+    current_year_of_study = models.CharField(_("Current Year of Study"), max_length=20, blank=True, null=True)
     final_year_status = models.CharField(_("Final Year Status"), max_length=20, help_text=_("Update when appropriate"), blank=True, null=True)
 
     # NEXT OF KIN INFORMATION

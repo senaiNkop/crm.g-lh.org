@@ -111,7 +111,6 @@ let edit_profile = (url, username) => {
 
         const files = document.querySelector('#profilePic').files;
 
-
         // BIO DATA
         let first_name = document.querySelector('#firstName').value;
         let surname = document.querySelector('#surname').value;
@@ -120,6 +119,7 @@ let edit_profile = (url, username) => {
         if (gender[0].checked){
             gender = gender[0].value;
         }
+
         else {
             gender = gender[1].value;
         }

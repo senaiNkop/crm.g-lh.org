@@ -37,21 +37,6 @@ class BibleReadingListView(LoginRequiredMixin, ListView):
 
         return context
 
-
-class UpdateBibleReadingListView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
-    template_name = "dashboard/table/table-data.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['bible_challenge_on'] = True
-        context['category'] = 'Bible Reading'
-        context['user'] = self.request.user
-        context['title'] = title
-
-        return context
-
     def post(self, request, **kwargs):
 
         try:
@@ -90,38 +75,32 @@ class BibleReadingDetailView(LoginRequiredMixin, DetailView):
 
         return context
 
-
-class UpdateBibleReadingDetailView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('bible-reading-detail')
-    template_name = 'dashboard/special-pages/detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(UpdateBibleReadingDetailView, self).get_context_data(**kwargs)
-
-        context['category'] = 'Bible Reading'
-        context['user'] = self.request.user
-        context['title'] = title
-
-        return context
-
     def post(self, request, **kwargs):
+        context = {'category': 'Bible Reading', 'user': self.request.user, 'title': title}
 
-        comment = request.POST['comment']
-        date = request.POST['date']
-        status = request.POST['status']
+        try:
+            comment = request.POST['comment']
+            date = request.POST['date']
+            status = request.POST['status']
 
-        bible_reading = BibleReading.objects.get(id=kwargs['pk'], bible_passage=kwargs['passage'], username=request.user)
+            bible_reading = BibleReading.objects.get(id=kwargs['pk'], bible_passage=kwargs['passage'], username=request.user)
 
-        bible_reading.comment = comment
-        bible_reading.status = status
-        bible_reading.date = datetime.strptime(date, '%m/%d/%Y')
+            bible_reading.comment = comment
+            bible_reading.status = status
+            bible_reading.date = datetime.strptime(date, '%m/%d/%Y')
 
-        bible_reading.save()
+            bible_reading.save()
+        except Exception:
+            context['detail_update'] = 'failed'
+            return self.render_to_response(context)
 
         recent = RecentActivity(username=request.user, category="bible_reading",
                                 details=f"Updated {kwargs['passage']}")
         recent.save()
-        return JsonResponse({'love': 'you'})
+
+        context['detail'] = BibleReading.objects.get(id=kwargs['pk'])
+        context['detail_update'] = 'successful'
+        return self.render_to_response(context)
 
 
 class PrayerMarathonListView(LoginRequiredMixin, ListView):
@@ -132,20 +111,6 @@ class PrayerMarathonListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         username = get_object_or_404(get_user_model(), username=self.request.user.username)
         return PrayerMarathon.objects.filter(username=username).order_by('-date')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['category'] = 'Prayer Marathon'
-        context['user'] = self.request.user
-        context['title'] = title
-
-        return context
-
-
-class UpdatePrayerMarathonListView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
-    template_name = "dashboard/table/table-data.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -189,32 +154,33 @@ class PrayerMarathonDetailView(LoginRequiredMixin, DetailView):
 
         return context
 
-
-class UpdatePrayerMarathonDetailView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
-    template_name = 'dashboard/special-pages/detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(UpdatePrayerMarathonDetailView, self).get_context_data(**kwargs)
+    def post(self, request, **kwargs):
+        context = {}
 
         context['category'] = 'Prayer Marathon'
         context['user'] = self.request.user
         context['title'] = title
 
-        return context
+        try:
+            comment = request.POST['comment']
+            date = request.POST['date']
 
-    def post(self, request, **kwargs):
-        comment = request.POST['comment']
-        date = request.POST['date']
+            prayer_marathon = PrayerMarathon.objects.get(id=kwargs['pk'], username=request.user)
+            prayer_marathon.comment = comment
+            prayer_marathon.date = datetime.strptime(date, '%m/%d/%Y')
 
-        prayer_marathon = PrayerMarathon.objects.get(id=kwargs['pk'], username=request.user)
-        prayer_marathon.comment = comment
-        prayer_marathon.date = datetime.strptime(date, '%m/%d/%Y')
-
-        prayer_marathon.save()
+            prayer_marathon.save()
+        except IndexError:
+            context['detail_update'] = 'failed'
+            return self.render_to_response(context)
 
         # Save Recent Activity
         recent = RecentActivity(username=request.user, category="prayer_marathon",
                                 details='Intercession')
         recent.save()
-        return JsonResponse({'love': 'you'})
+
+        context['detail'] = PrayerMarathon.objects.get(id=kwargs['pk'])
+        context['detail_update'] = 'successful'
+        return self.render_to_response(context)
+
+

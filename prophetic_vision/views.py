@@ -33,20 +33,6 @@ class PropheticVisionListView(LoginRequiredMixin, ListView):
 
         return context
 
-
-class UpdatePropheticVisionListView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
-    template_name = "dashboard/table/table-data.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(UpdatePropheticVisionListView, self).get_context_data(**kwargs)
-
-        context['category'] = 'Prophetic Vision'
-        context['user'] = self.request.user
-        context['title'] = title
-
-        return context
-
     def post(self, request, **kwargs):
         description = request.POST['prophetic_vision_description']
         date = request.POST['prophetic_vision_date']
@@ -80,34 +66,28 @@ class PropheticVisionDetailView(LoginRequiredMixin, DetailView):
 
         return context
 
-
-class UpdatePropheticVisionDetailView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
-    template_name = 'dashboard/special-pages/detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['category'] = 'Prophetic Vision'
-        context['user'] = self.request.user
-        context['title'] = title
-
-        return context
-
     def post(self, request, **kwargs):
-        description = request.POST['description']
-        date = request.POST['date']
-        body = request.POST['body']
+        context = {'category': 'Prophetic Vision', 'user': self.request.user, 'title': title}
 
-        prophetic_vision = PropheticVision.objects.get(id=kwargs['pk'])
-        prophetic_vision.description = description
-        prophetic_vision.body = body
-        prophetic_vision.date = datetime.strptime(date, '%m/%d/%Y')
+        try:
+            description = request.POST['description']
+            date = request.POST['date']
+            body = request.POST['body']
 
-        prophetic_vision.save()
+            prophetic_vision = PropheticVision.objects.get(id=kwargs['pk'])
+            prophetic_vision.description = description
+            prophetic_vision.body = body
+            prophetic_vision.date = datetime.strptime(date, '%m/%d/%Y')
+
+            prophetic_vision.save()
+        except Exception:
+            context['detail_update'] = 'failed'
+            return self.render_to_response(context)
 
         recent = RecentActivity(username=request.user, category="prophetic_vision",
                                 details=f'Prophetic on {date}')
         recent.save()
 
-        return JsonResponse({'love': 'You'})
+        context['detail'] = PropheticVision.objects.get(id=kwargs['pk'])
+        context['detail_update'] = 'successful'
+        return self.render_to_response(context)

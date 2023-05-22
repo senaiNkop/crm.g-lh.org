@@ -10,6 +10,7 @@ class PropheticVision(models.Model):
     username = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, to_field='username')
     date = models.DateField(default=timezone.now)
     title = models.CharField(max_length=1000, null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     body = models.TextField()
 
     def __str__(self):

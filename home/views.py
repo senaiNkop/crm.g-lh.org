@@ -115,14 +115,15 @@ class Profile(LoginRequiredMixin, TemplateView):
         form = request.POST['form_name']
 
         if form.lower().strip() == 'password':
-            current_password = request.POST['current']
-            new_password = request.POST['new']
+            current_password = request.POST['current_password']
+            new_password = request.POST['new_password']
             # get user using password as a means of confirmation
 
             user = request.user
 
             if not user.check_password(current_password):
-                return JsonResponse({'confirm': False}, safe=False)
+                context['password_update'] = 'failed'
+                return self.render_to_response(context)
 
             user.set_password(new_password)
             user.save()
@@ -130,7 +131,9 @@ class Profile(LoginRequiredMixin, TemplateView):
             recent = RecentActivity(username=request.user, category="bio_data",
                                     details='Changed Password')
             recent.save()
-            return JsonResponse({'confirm': True}, safe=False)
+
+            context['password_update'] = 'successful'
+            return self.render_to_response(context)
 
         elif form.lower().strip() == 'profile':
 
@@ -151,9 +154,8 @@ class Profile(LoginRequiredMixin, TemplateView):
             user.about = request.POST['about']
 
             # PERSONAL DATA
-            user.phone_number = request.POST['phone_number']
-            user.email = request.POST['email']
-            user.occupation = request.POST['occupation']
+            user.phone_number = request.POST.get('phone_number', '')
+            user.occupation = request.POST.get('occupation', '')
             user.address = request.POST['address']
             user.skills = request.POST['skills']
 
@@ -216,11 +218,12 @@ class Profile(LoginRequiredMixin, TemplateView):
                                     details='Updated Bio Data')
             recent.save()
 
-            return JsonResponse({'confirm': True}, safe=False)
+            context['profile_update'] = 'successful'
+            return self.render_to_response(context)
 
 
 class CatalogView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users_login')
+    login_url = reverse_lazy('users-login')
     template_name = 'dashboard/table/catalog_table.html'
 
     def get_context_data(self, **kwargs):
@@ -265,7 +268,7 @@ class CatalogView(LoginRequiredMixin, TemplateView):
 
 
 class TaskView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users_login')
+    login_url = reverse_lazy('users-login')
     template_name = 'dashboard/special-pages/tasks.html'
 
     def get_context_data(self, **kwargs):

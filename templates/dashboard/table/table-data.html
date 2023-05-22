@@ -153,7 +153,7 @@
                     <div class="offcanvas-body">
                         {% if category == 'Bible Reading' %}
                             <div>
-                                <form method="POST" action="{% url 'bible_reading:update-list' %}" class="row g-3 needs-validation" novalidate>
+                                <form method="POST" class="row g-3 needs-validation" novalidate>
                                     <div class="col-md-12">
                                        <label for="validationCustom01" class="form-label">Bible Passage</label>
                                        <input type="text" class="form-control" name="bible_passage" id="validationCustom01" required>
@@ -199,7 +199,7 @@
                             </div>
                         {% elif category == 'Prayer Marathon' %}
                             <div>
-                                <form method="POST" action="{% url 'prayer_marathon:update-list' %}" class="row g-3 needs-validation" novalidate>
+                                <form method="POST" class="row g-3 needs-validation" novalidate>
                                     <div class="col-md-12">
                                         <label for="validationCustom02" class="form-label">Comment</label>
                                         <textarea class="form-control" style="height: 200px;" id="validationCustom02" name="prayer_marathon_comment" required></textarea>
@@ -218,7 +218,7 @@
                             </div>
                         {% elif category == 'Church Work' %}
                             <div>
-                                <form method="POST" action="{% url 'church_work:update-list' %}" class="row g-3 needs-validation" novalidate>
+                                <form method="POST" class="row g-3 needs-validation" novalidate>
                                     <div class="col-12">
                                         <label class="form-check-label" for="invalidCheck">
                                             Work Category
@@ -262,7 +262,7 @@
                             </div>
                         {% elif category == 'Evangelism' %}
                             <div>
-                                <form method="POST" action="{% url 'evangelism:update-list' %}" class="row g-3 needs-validation" novalidate>
+                                <form method="POST" class="row g-3 needs-validation" novalidate>
                                     <div class="col-md-12">
                                        <label for="validationCustom01" class="form-label">Field of Visit</label>
                                        <input type="text" class="form-control" name="evangelism_field_of_visit" id="validationCustom01" required>
@@ -330,7 +330,7 @@
                             </div>
                         {% elif category == 'Prophetic Vision' %}
                             <div>
-                                <form method="POST" action="{% url 'prophetic_vision:update-list' %}" class="row g-3 needs-validation" novalidate>
+                                <form method="POST" class="row g-3 needs-validation" novalidate>
                                     <div class="col-md-12">
                                         <label for="validationCustom01" class="form-label">Description</label>
                                         <input type="text" class="form-control" name="prophetic_vision_description" id="validationCustom01" required>

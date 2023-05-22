@@ -35,20 +35,6 @@ class ChurchWorkListView(LoginRequiredMixin, ListView):
 
         return context
 
-
-class UpdateChurchWorkListView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
-    template_name = "dashboard/table/table-data.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['category'] = 'Church Work'
-        context['user'] = self.request.user
-        context['title'] = title
-
-        return context
-
     def post(self, request, **kwargs):
         details = request.POST['church_work_details']
         work_category = request.POST['church_work_category']
@@ -85,41 +71,40 @@ class ChurchWorkDetailView(LoginRequiredMixin, DetailView):
 
         return context
 
-
-class UpdateChurchWorkDetailView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
-    template_name = 'dashboard/special-pages/detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(UpdateChurchWorkDetailView, self).get_context_data(**kwargs)
-
+    def post(self, request, **kwargs):
+        context = {}
         context['category'] = 'Church Work'
         context['user'] = self.request.user
         context['title'] = title
 
-        return context
+        try:
+            details = request.POST['details']
+            work_category = request.POST['work_category']
+            hours_spent = request.POST['hours_spent']
+            start_time = request.POST['start_time']
+            end_time = request.POST['end_time']
+            date = request.POST['date']
 
-    def post(self, request, **kwargs):
-        details = request.POST['details']
-        work_category = request.POST['work_category']
-        hours_spent = request.POST['hours_spent']
-        start_time = request.POST['start_time']
-        end_time = request.POST['end_time']
-        date = request.POST['date']
+            church_work = ChurchWork.objects.get(id=kwargs['pk'])
+            church_work.details = details
+            church_work.work_category = work_category
+            church_work.start_time = time.fromisoformat(start_time)
+            church_work.end_time = time.fromisoformat(end_time)
+            church_work.hours_spent = hours_spent
+            church_work.date = datetime.strptime(date, '%m/%d/%Y')
+            church_work.last_active_date = timezone.now()
 
-        church_work = ChurchWork.objects.get(id=kwargs['pk'])
-        church_work.details = details
-        church_work.work_category = work_category
-        church_work.start_time = time.fromisoformat(start_time)
-        church_work.end_time = time.fromisoformat(end_time)
-        church_work.hours_spent = hours_spent
-        church_work.date = datetime.strptime(date, '%m/%d/%Y')
-        church_work.last_active_date = timezone.now()
-
-        church_work.save()
+            church_work.save()
+        except Exception:
+            context['detail_update'] = 'failed'
+            return self.render_to_response(context)
 
         recent = RecentActivity(username=request.user, category="church_work",
                                 details=f'Worked on {work_category}')
         recent.save()
 
-        return JsonResponse({'love': 'You'})
+        context['detail'] = ChurchWork.objects.get(id=kwargs['pk'])
+        context['detail_update'] = 'successful'
+
+        return self.render_to_response(context)
+

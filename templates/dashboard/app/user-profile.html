@@ -75,6 +75,8 @@
              <div class="profile-content tab-content">
                <div id="profile-edit" class="tab-pane fade">
                    <form method="POST" enctype="multipart/form-data" id="profile_form">
+                      {% csrf_token %}
+
                       <div class="card">
                          <div class="card-header d-flex align-items-center justify-content-between pb-4">
                             <div class="header-title">
@@ -94,6 +96,10 @@
                                    <fieldset id="personal_information" class="row">
                                        <legend>Bio Data</legend><br>
 
+                                       <div class="form-group col-lg-12 col-md-12">
+                                           <input class="form-control" type="text" name="form_name" hidden value="profile">
+                                       </div>
+
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="firstName">First Name:</label>
                                            <input type="text" class="form-control" id="firstName" name="first_name" placeholder="First Name" value="{{ user.first_name }}">
@@ -104,7 +110,7 @@
                                        </div>
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="date_of_birth">Date of Birth</label>
-                                           <input type="date" class="form-control" id="date_of_birth" value="{% if user.date_of_birth %}{{ user.get_iso_date_of_birth }}{% endif %}" required>
+                                           <input type="date" class="form-control" name="date_of_birth" id="date_of_birth" value="{% if user.date_of_birth %}{{ user.get_iso_date_of_birth }}{% endif %}" required>
                                        </div>
                                        <div class="form-group col-md-6">
                                            <label for="" class="form-label">Gender</label>
@@ -191,7 +197,7 @@
                                    <fieldset id="basic_medic_information" class="row">
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="blood_group">Blood Group:</label>
-                                           <select name="blood_group" id="blood_group" class="form-select mb-3">
+                                           <select name="blood_group" id="blood_group" name="blood_group" class="form-select mb-3">
                                                {% for option in blood_group %}
                                                    <option value="{{ option.0 }}" {% if option.0 == user.blood_group %}selected{% endif %}>{{ option.1 }}</option>
                                                {% endfor %}
@@ -199,7 +205,7 @@
                                        </div>
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="genotype">Genotype:</label>
-                                           <select name="genotype" id="genotype" class="form-select mb-3">
+                                           <select name="genotype" id="genotype" name="genotype" class="form-select mb-3">
                                                {% for option in genotype %}
                                                    <option value="{{ option.0 }}" {% if option.0 == user.genotype %}selected{% endif %}>{{ option.1 }}</option>
                                                {% endfor %}
@@ -314,7 +320,7 @@
                                        </div>
                                        <div class="form-group col-md-12">
                                            <label class="form-label" for="next_of_kin_address">Address:</label>
-                                           <input type="text" class="form-control" id="next_of_kin_address" name="next_of_kin_relationship" value="{{ user.next_of_kin_address|empty_space_if_none }}">
+                                           <input type="text" class="form-control" id="next_of_kin_address" name="next_of_kin_address" value="{{ user.next_of_kin_address|empty_space_if_none }}">
                                        </div>
                                    </fieldset>
                                 </div>
@@ -421,15 +427,6 @@
                       <div class="card">
                           <div class="card-body">
                             <button type="submit" class="btn btn-primary">Save Changes</button>
-
-                            <div id="profile_update_successful" class="mb-3 alert alert-left alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px; display: none">
-                                <span id="message"> This is a success alert—check it out!</span>
-{#                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>#}
-                            </div>
-                            <div id="profile_update_failed" class="alert alert-bottom alert-danger alert-dismissible fade show " role="alert" style="margin-top: 10px; display: none">
-                                <span id="message"> This is a danger alert—check it out!</span>
-{#                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>#}
-                            </div>
                          </div>
                       </div>
                    </form>
@@ -442,25 +439,33 @@
                          </div>
                       </div>
                       <div class="card-body">
-                         <form class="row g-3 needs-validation" id="password_form" novalidate>
+                         <form method="POST" enctype="multipart/form-data" class="row g-3 needs-validation" id="password_form" novalidate>
+                            {% csrf_token %}
                             <div style="text-align: center">
                                 <p id="password_successful" style="color: green; display: none"><i>Password change successfully...<br>Please wait as page reloads</i></p>
                                 <p id="password_failed" style="color: red; display: none"><i>Current password is incorrect</i></p>
                                 <p id="password_error" style="color: red; display: none">An error occurred...Try again</p>
                             </div>
 
+                             <div class="form-group col-lg-12 col-md-12">
+                               <input class="form-control" type="text" name="form_name" hidden value="password">
+                            </div>
+
                             <div class="col-md-12">
                                <label for="currentPassword" class="form-label">Current Password</label>
                                <input type="password" class="form-control" id="currentPassword" name="current_password" required>
                             </div>
+
                             <div class="col-md-12">
                                <label for="newPassword" class="form-label">New Password</label>
                                <input type="text" class="form-control" id="newPassword" name="new_password" required>
                             </div>
+
                             <div class="col-md-12">
                                <label for="confirmPassword" class="form-label">Re-enter New Password</label>
                                <input type="text" class="form-control" id="confirmPassword" name="confirm_password" required>
                             </div>
+
                             <div class="col-12">
                                <button class="btn btn-primary" type="submit" disabled id="password_submit_button">Submit form</button>
                             </div>
@@ -470,8 +475,33 @@
 
                </div>
                <div id="profile-overview" class="tab-pane fade active show">
+                   {% if profile_update == 'successful' %}
+                       <div class="mb-3 alert alert-left alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                            <span id="message"> Your profile has been successfully updated!</span>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                       </div>
+                   {% elif profile_update == 'failed' %}
+                       <div class="alert alert-bottom alert-danger alert-dismissible fade show " role="alert" style="margin-top: 10px;">
+                            <span id="message"> Your profile failed to be updated </span>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                       </div>
+                   {% endif %}
+
+                  {% if password_update == 'failed' %}
+                      <div class="alert alert-bottom alert-danger alert-dismissible fade show " role="alert" style="margin-top: 10px;">
+                            <span id="message"> Your password failed to be change </span>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                  {% elif password_update == 'successful' %}
+                      <div class="mb-3 alert alert-left alert-success alert-dismissible fade show" role="alert" style="margin-top: 10px;">
+                            <span id="message"> Your password has been successfully changed!</span>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                  {% endif %}
                   <div class="card">
                      <div class="card-header">
+
+
                         <div class="header-title">
                            <h4 class="card-title">Profile</h4>
                         </div>
@@ -798,10 +828,10 @@
     <script src="{% static 'assets/js/sub_main.js' %}"></script>
     <script>
         url = "{% url 'users-profiles' user.username %}";
-        change_password(url);
+        {#change_password(url);#}
         password_validation();
-        preview_image();
-        edit_profile(url);
+        {#preview_image();#}
+        {#edit_profile(url);#}
     </script>
 
 {% endblock javascript %}

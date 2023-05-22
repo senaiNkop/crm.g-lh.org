@@ -34,20 +34,6 @@ class EvangelismListView(LoginRequiredMixin, ListView):
 
         return context
 
-
-class UpdateEvangelismListView(LoginRequiredMixin, TemplateView):
-    login_url = reverse_lazy('users-login')
-    template_name = "dashboard/table/table-data.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['category'] = 'Evangelism'
-        context['user'] = self.request.user
-        context['title'] = title
-
-        return context
-
     def post(self, request, **kwargs):
         field_of_visit = request.POST['evangelism_field_of_visit']
         hours_spent = request.POST['evangelism_hours_spent']
@@ -94,6 +80,54 @@ class EvangelismDetailView(LoginRequiredMixin, DetailView):
         context['title'] = title
 
         return context
+
+    def post(self, request, **kwargs):
+        context = {}
+
+        context['category'] = 'Evangelism'
+        context['user'] = self.request.user
+        context['title'] = title
+
+        try:
+            field_of_visit = request.POST['field_of_visit']
+            hours_spent = request.POST['hours_spent']
+            led_to_christ = request.POST['no_led_to_christ']
+            follow_up = request.POST['follow_up']
+            invites = request.POST['no_of_invites']
+            baptism = request.POST['no_of_baptism']
+            people_prayed = request.POST['people_prayed']
+            prints_shared = request.POST['prints_shared']
+            messages_shared = request.POST['messages_shared']
+            snippets = request.POST['snippets']
+            first_date = request.POST['first_date']
+            last_date = request.POST['last_date']
+
+            evangelism = Evangelism.objects.get(id=kwargs['pk'], username=request.user)
+            evangelism.field_of_visit = field_of_visit
+            evangelism.hours_spent_per_week = hours_spent
+            evangelism.no_led_to_christ = led_to_christ
+            evangelism.follow_up = follow_up
+            evangelism.invitees = invites
+            evangelism.holy_spirit_baptism = baptism
+            evangelism.no_of_people_prayed = people_prayed
+            evangelism.prints_shared = prints_shared
+            evangelism.snippets = snippets
+            evangelism.messages = messages_shared
+            evangelism.first_date_of_week = datetime.strptime(first_date, '%m/%d/%Y')
+            evangelism.last_date_of_week = datetime.strptime(last_date, '%m/%d/%Y')
+
+            evangelism.save()
+        except Exception:
+            context['detail_update'] = 'failed'
+            return self.render_to_response(context)
+
+        recent = RecentActivity(username=request.user, category="evangelism",
+                                details='Updated Evangelism')
+        recent.save()
+
+        context['detail'] = Evangelism.objects.get(id=kwargs['pk'])
+        context['detail_update'] = 'successful'
+        return self.render_to_response(context)
 
 
 class UpdateEvangelismDetailView(LoginRequiredMixin, TemplateView):
