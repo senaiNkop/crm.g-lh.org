@@ -14,7 +14,7 @@ class PermissionInline(admin.StackedInline):
 # Register your models here.
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'first_name', 'last_name', 'gender', 'get_user_age')
+    list_display = ('get_full_name', 'level', 'shepherd', 'sub_shepherd', 'get_user_age')
     list_filter = ('gender', 'country', 'state', 'lga', 'course_of_study', 'occupation', 'skills')
     search_fields = ('first_name', 'last_name', 'country', 'state', 'shepherd')
     date_hierarchy = 'date_of_birth'

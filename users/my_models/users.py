@@ -84,10 +84,10 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-    def get_sheep(self, shepherd):
+    def get_shepherd_sheep(self, shepherd):
         return self.get_queryset().filter(shepherd=shepherd)
 
-    def get_sub_sheep(self, sub_shepherd):
+    def get_sub_shepherd_sheep(self, sub_shepherd):
         return self.get_queryset().filter(sub_shepherd=sub_shepherd)
 
 

@@ -29,8 +29,12 @@
     <div class="col-md-12">
         <div class="flex-wrap d-flex justify-content-between align-items-center">
             <div>
-                <h1>Welcome back {% if user.gender == 'M' %}Shepherd{% elif user.gender == 'F' %}Shepherdess{% endif %}!</h1>
-                <p>How are the Lord's sheep faring?</p>
+                <h1>Welcome back {% if user.level == 'chief_shep' %}General{% elif user.gender == 'M' %}Shepherd{% elif user.gender == 'F' %}Shepherdess{% endif %}!</h1>
+                {% if user.level == 'chief_shep' %}
+                    <p>How are the Lord's troops under you command?</p>
+                {% else %}
+                    <p>How are the Lord's sheep faring?</p>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -44,31 +48,62 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table id="datatable" class="table table-striped" data-toggle="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Gender</th>
-                                        <th>Last Active</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    {% for person in sheep %}
+                                {% if user.level == 'chief_shep' %}
+                                    <thead>
                                         <tr>
-                                            <td><a href="{% url 'pastoring:sheep-summary' user.username person.username %}">{{ person.get_full_name }}</a></td>
-                                            <td>{{ person.gender }}</td>
-                                            <td>{{ person.last_active_date|date:"l d F Y" }}</td>
+                                            <th>Shepherd</th>
+                                            <th>Gender</th>
+                                            <th>No of Sub Shepherd</th>
+                                            <th>Total No of Sheep</th>
                                         </tr>
-                                    {% endfor %}
-                                </tbody>
-                                
-                                <tfoot>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Gender</th>
-                                        <th>Last Active</th>
-                                    </tr>
-                                </tfoot>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for shep in core_shepherd %}
+                                            <tr>
+                                                <td><a href="{% url 'pastoring:shepherd-list' shep.id %}">{{ shep.name.get_full_name }}</a></td>
+                                                <td>{{ shep.name.gender }}</td>
+                                                <td>{{ shep.get_no_of_sub_shepherd }}</td>
+                                                <td>{{ shep.get_no_of_sheep }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            <th>Shepherd</th>
+                                            <th>Gender</th>
+                                            <th>No of Sub Shepherd</th>
+                                            <th>Total No of Sheep</th>
+                                        </tr>
+                                    </tfoot>
+                                {% else %}
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Gender</th>
+                                            <th>Last Active</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        {% for person in sheep %}
+                                            <tr>
+                                                <td><a href="{% url 'pastoring:sheep-summary' user.username person.username %}">{{ person.get_full_name }}</a></td>
+                                                <td>{{ person.gender }}</td>
+                                                <td>{{ person.last_active_date|date:"l d F Y" }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Gender</th>
+                                            <th>Last Active</th>
+                                        </tr>
+                                    </tfoot>
+                                {% endif %}
                             </table>
                         </div>
 

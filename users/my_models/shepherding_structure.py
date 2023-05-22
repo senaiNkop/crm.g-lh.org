@@ -17,6 +17,10 @@ Calling = (
 )
 
 
+class CustomShepherdManager(models.Manager):
+    pass
+
+
 class Shepherd(models.Model):
     name = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, to_field='username',
                                 related_name='+', limit_choices_to={'is_staff': True})
@@ -56,6 +60,15 @@ class Shepherd(models.Model):
 
         self.date_of_appointment = date
 
+    def get_no_of_sub_shepherd(self):
+        sub_shepherd = SubShepherd.objects.filter(name__shepherd=self)
+        return len(sub_shepherd)
+
+    def get_no_of_sheep(self):
+        sheep = get_user_model().objects.get_shepherd_sheep(shepherd=self)
+
+        return len(sheep)
+
 
 class SubShepherd(models.Model):
     name = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, to_field='username')
@@ -90,18 +103,6 @@ class SubShepherd(models.Model):
     @admin.display(description='Sex')
     def get_subshepherd_gender(self):
         return self.name.gender
-
-    @admin.display(description='Shepherd')
-    def get_shepherd_full_name(self):
-        return f"{self.shepherd.name.first_name} {self.shepherd.name.last_name}"
-
-    def clean(self):
-        # Don't let sub shepherd be the shepherd of himself
-        shepherd = self.shepherd.name.username
-        sub_shepherd = self.name.username
-
-        if shepherd == sub_shepherd:
-            raise ValidationError(_("A Sub Shepherd can't also be his own Shepherd"))
 
     def set_date_of_appointment(self, date):
         date = Validators.validate_prevent_future_date(value=date)

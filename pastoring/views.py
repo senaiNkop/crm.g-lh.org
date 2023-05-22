@@ -46,13 +46,41 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['shepherd'] = shepherd
 
         if user.level == 'chief_shep':
-            context['sheep'] = get_user_model().objects.all().exclude(username=user.username)
+            context['core_shepherd'] = Shepherd.objects.all().exclude(name=user)
+
         elif user.level == 'core_shep':
-            context['sheep'] = get_user_model().objects.get_sheep(shepherd=shepherd)
+
+            context['sheep'] = get_user_model().objects.get_shepherd_sheep(shepherd=shepherd)
+
         elif user.level == 'sub_shep':
-            context['sheep'] = get_user_model().objects.get_sub_sheep(sub_shepherd=shepherd)
+            context['sheep'] = get_user_model().objects.get_sub_shepherd_sheep(sub_shepherd=shepherd)
 
         return context
+
+
+class ShepherdSheepListView(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('users-login')
+    template_name = 'pastoring/shepherd_sheep_list.html'
+
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_staff and (self.request.user.level == 'chief_shep'):
+            return super().get(request, *args, **kwargs)
+        return HttpResponseForbidden("You are not a Shepherd...please go back")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+
+        context['category'] = 'Shepherd List'
+        context['developers'] = developers
+
+        shepherd = Shepherd.objects.get(id=kwargs['pk'])
+        sheep = get_user_model().objects.get_shepherd_sheep(shepherd)
+
+        context['shepherd'] = shepherd
+        context['sheep'] = sheep
+
+        return context
+
 
 
 class SheepSummaryDetailView(LoginRequiredMixin, TemplateView):

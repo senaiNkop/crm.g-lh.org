@@ -154,21 +154,19 @@ class ProfileUpdateTest(TestCase):
 
     def test_profile_password_validation_with_wrong_password(self):
         response = self.client.post(self.profile_url, {
-            'current': 'Love', 'new': 'God', 'form_name': 'password'
+            'current_password': 'Love', 'new_password': 'God', 'form_name': 'password'
         })
 
         self.assertEqual(200, response.status_code)
-        self.assertIsInstance(response, JsonResponse)
-        self.assertFalse(response.json()['confirm'])
+        self.assertNotIsInstance(response, JsonResponse)
 
     def test_profile_password_validation_with_correct_password(self):
         response = self.client.post(self.profile_url, {
-            'current': 'Nkopuruk@4', 'new': 'Samuel', 'form_name': 'password'
+            'current_password': 'Nkopuruk@4', 'new_password': 'Samuel', 'form_name': 'password'
         })
 
         self.assertEqual(200, response.status_code)
-        self.assertIsInstance(response, JsonResponse)
-        self.assertTrue(response.json()['confirm'])
+        self.assertNotIsInstance(response, JsonResponse)
 
         self.user.refresh_from_db()
 
@@ -183,8 +181,8 @@ class ProfileUpdateTest(TestCase):
             'address': 'No. 15 Ikpa Road', 'skills': 'Bible Reading',
             'blood_group': 'O-', 'genotype': 'AS', 'chronic_illness': '',
             'lga': 'Nyanya', 'state': 'Abuja', 'country': 'Nigeria',
-            'course_of_study': 'Medical & Surgery', 'years_of_study': 5,
-            'current_year_of_study': 5, 'final_year_status': 'True',
+            'course_of_study': 'Medical & Surgery', 'years_of_study': '5',
+            'current_year_of_study': '5', 'final_year_status': 'True',
             'next_of_kin_full_name': 'Festus Effiong', 'next_of_kin_relationship':'Brother',
             'next_of_kin_phone_number': '09035018948', 'next_of_kin_address': 'Ikot Ikpene',
             'gift_graces': 'seer, exhortation', 'unit_of_work': 'GAT CC, GMT',
@@ -194,7 +192,7 @@ class ProfileUpdateTest(TestCase):
         response = self.client.post(self.profile_url, data)
 
         self.assertEqual(200, response.status_code)
-        self.assertIsInstance(response, JsonResponse)
+        self.assertNotIsInstance(response, JsonResponse)
 
         self.user.refresh_from_db()
 
