@@ -113,9 +113,9 @@ class SheepSummaryDetailView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ChurchWorkView(LoginRequiredMixin, TemplateView):
+class DetailView(LoginRequiredMixin, TemplateView):
     login_url = reverse_lazy('users-login')
-    template_name = 'pastoring/sheep_summary_details.html'
+    template_name = 'dashboard/special-pages/detail.html'
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_staff and (
@@ -123,3 +123,26 @@ class ChurchWorkView(LoginRequiredMixin, TemplateView):
                 or self.request.user.level == 'chief_shep'):
             return super().get(request, *args, **kwargs)
         return HttpResponseForbidden("You are not a Shepherd...please go back")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        category = kwargs['category']
+        context['category'] = category
+        context['title'] = title
+
+        context['user'] = get_user_model().objects.get(username=kwargs['sheep'])
+
+        pk = kwargs['pk']
+        if category == 'Church Work':
+            detail = ChurchWork.objects.get(id=pk)
+        else:
+            detail = 'Love'
+
+        context['detail'] = detail
+
+        return context
+
+
+
+

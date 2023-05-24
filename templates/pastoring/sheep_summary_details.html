@@ -55,7 +55,7 @@
                                         {% for work in church_work %}
                                             <tr>
                                                 <td>
-                                                    <a href="">{{ work.details|truncatewords:'7' }}</a>
+                                                    <a href="{% url 'pastoring:sheep-detail' user.username sheep.username 'Church Work' work.id %}">{{ work.details|truncatewords:'7' }}</a>
                                                 </td>
                                                 <td>{{ work.work_category|format_text }}</td>
                                                 <td>{{ work.date }}</td>
