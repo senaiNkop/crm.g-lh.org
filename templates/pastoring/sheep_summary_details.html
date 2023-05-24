@@ -11,7 +11,19 @@
                     <div class="card">
                         <div class="card-header d-flex justify-content-between">
                             <div class="header-title">
-                                <h4 class="card-title">Basic</h4>
+                                <h4 class="card-title">
+                                    {% if sheep.level == 'core_shep' %}
+                                        Is your Captains slack in doing the Lord's Work?
+                                    {% elif sheep.level == 'sub_shep' %}
+                                        How well is our young officer learning to Wrestle?
+                                    {% elif sheep.level == 'worker' %}
+                                        Are they putting their hands to the plow?
+                                    {% elif sheep.level == 'new_mem' or sheep.level == 'mem' %}
+                                        Hmm is our young sheep feeding properly on the milk of the word
+                                    {% else %}
+                                        Hello Fellow General
+                                    {% endif %}
+                                </h4>
                             </div>
                         </div>
                         <div class="card-body">
@@ -30,8 +42,8 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <div class="bd-example table-responsive">
-                                <table class="table table-hover">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-hover" data-toggle="data-table">
                                     <thead>
                                         <tr>
                                             <th scope="col">Detail</th>
@@ -41,7 +53,7 @@
                                     </thead>
                                     <tbody>
                                         {% for work in church_work %}
-                                            <tr class="{% cycle 'table-warning' 'table-light' %}">
+                                            <tr>
                                                 <td>
                                                     <a href="">{{ work.details|truncatewords:'7' }}</a>
                                                 </td>
@@ -51,15 +63,223 @@
                                         {% empty %}
                                             <tr>
                                                 <td colspan="3"><h4>No Work Done</h4></td>
+                                                <td></td>
+                                                <td></td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="col">Detail</th>
+                                            <th scope="col">Work Category</th>
+                                            <th scope="col">Date</th>
+                                        </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-title">
+                                <h4 class="card-title">Field Mission</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-hover" data-toggle="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Field of Visit</th>
+                                            <th scope="col">No of Follow up</th>
+                                            <th scope="col">No Led to Christ</th>
+                                            <th scope="col">No of Holy Spirit Baptism</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for mission in field_mission %}
+                                            <tr>
+                                                <td>
+                                                    <a href="#">{{ mission.field_of_visit }}</a>
+                                                </td>
+                                                <td>{{ mission.follow_up }}</td>
+                                                <td>{{ mission.no_led_to_christ }}</td>
+                                                <td>{{ mission.holy_spirit_baptism }}</td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="3"><h4>No Field Mission</h4></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="col">Field of Visit</th>
+                                            <th scope="col">No of Follow up</th>
+                                            <th scope="col">No Led to Christ</th>
+                                            <th scope="col">No of Holy Spirit Baptism</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-title">
+                                <h4 class="card-title">Bible Reading</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-hover" data-toggle="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Bible Passage</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for reading in bible_reading %}
+                                            <tr>
+                                                <td>
+                                                    <a href="#">{{ reading.bible_passage }}</a>
+                                                </td>
+                                                <td>{{ reading.status }}</td>
+                                                <td>{{ reading.date }}</td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="3"><h4>No Milk Suck Yet</h4></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="col">Bible Passage</th>
+                                            <th scope="col">Status</th>
+                                            <th scope="col">Date</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-title">
+                                <h4 class="card-title">Prayer Marathon</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-hover" data-toggle="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Comment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for prayer in prayer_marathon %}
+                                            <tr>
+                                                <td>
+                                                    <a href="#">{{ prayer.date }}</a>
+                                                </td>
+                                                <td>{{ prayer.comment|truncatewords:"5" }}</td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="3"><h4>No Prayer Walk</h4></td>
+                                                <td></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Comment</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between">
+                            <div class="header-title">
+                                <h4 class="card-title">Prophetic Vision</h4>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-hover" data-toggle="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for vision in prophetic_vision %}
+                                            <tr>
+                                                <td>
+                                                    <a href="#">{{ vision.date }}</a>
+                                                </td>
+                                                <td>{{ vision.title }}</td>
+                                                <td>{{ vision.description|truncatewords:"6" }}</td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="3"><h4>Hab 2:2</h4></td>
+                                                <td></td>
+                                                <td></td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Description</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="row">
                 <div class="col-sm-12">
                     <div class="card">
@@ -69,7 +289,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <p>Stellite View google map</p>
+                            <p>Satellite View google map</p>
                             <iframe class="w-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d552.6523460203307!2d-121.8326811833386!3d38.44960145310393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085259f4fcf781d%3A0x80a4c8c2bb5a0123!2s835%20Woodvale%20Dr%2C%20Dixon%2C%20CA%2095620%2C%20USA!5e1!3m2!1sen!2sin!4v1576670825530!5m2!1sen!2sin" height="500" allowfullscreen=""></iframe>
                         </div>
                     </div>

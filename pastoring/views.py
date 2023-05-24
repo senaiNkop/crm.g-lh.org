@@ -72,6 +72,7 @@ class ShepherdSheepListView(LoginRequiredMixin, TemplateView):
 
         context['category'] = 'Shepherd List'
         context['developers'] = developers
+        context['title'] = title
 
         shepherd = Shepherd.objects.get(id=kwargs['pk'])
         sheep = get_user_model().objects.get_shepherd_sheep(shepherd)
@@ -80,7 +81,6 @@ class ShepherdSheepListView(LoginRequiredMixin, TemplateView):
         context['sheep'] = sheep
 
         return context
-
 
 
 class SheepSummaryDetailView(LoginRequiredMixin, TemplateView):
@@ -105,6 +105,10 @@ class SheepSummaryDetailView(LoginRequiredMixin, TemplateView):
 
         context['sheep'] = sheep
         context['church_work'] = sheep.churchwork_set.all().order_by('-date')
+        context['field_mission'] = sheep.evangelism_set.all().order_by('no_of_people_prayed')
+        context['bible_reading'] = sheep.biblereading_set.all().order_by('status')
+        context['prayer_marathon'] = sheep.prayermarathon_set.all().order_by('-date')
+        context['prophetic_vision'] = sheep.propheticvision_set.all().order_by('-date')
 
         return context
 

@@ -107,6 +107,7 @@ class Profile(LoginRequiredMixin, TemplateView):
 
         context['genotype'] = GENOTYPE_CHOICES
         context['blood_group'] = BLOOD_GROUP_CHOICES
+        context['celebrant'] = get_user_model().objects.get_today_birthday()
 
         return context
 
@@ -320,10 +321,10 @@ class Registration(TemplateView):
             return self.render_to_response(context)
 
         # Save the this specific user's permission
-        permissions = Permission(name=user, can_edit_catalog=False,
-                                 head_of_department=False)
-
-        permissions.save()
+        # permissions = Permission(name=user, can_edit_catalog=False,
+        #                          head_of_department=False)
+        #
+        # permissions.save()
 
         login(request, user)
         return HttpResponseRedirect(reverse_lazy('home'))

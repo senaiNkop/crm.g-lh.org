@@ -70,7 +70,65 @@
                   </ul>
                </div>
              </div>
+             <div class="card">
+                <div class="card-header d-flex justify-content-between">
+                    <div class="header-title">
+                        <h4 class="card-title">Upcoming Birthday</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% for celeb in celebrant %}
+                        <div class="d-flex justify-content-start align-items-center mt-4">
+                            <div class="pe-3">
+                                <img id="celebrant_image_data" src="/media/{{ celeb.profile_pic }}" class="rounded-circle bg-soft-primary p-1" width="50" height="50" alt="1">
+                            </div>
+                            <div>
+                                <a href="#" onclick="birthday_pop_box('{{ celeb.get_full_name }}', '{{ celeb.username }}', '{{ celeb.about }}', '{{ celeb.gender }}')" data-bs-toggle="modal" data-bs-target="#exampleModalCenteredScrollable">
+                                    <h6 id="celebrant" class="mb-1" style="color: #3a57e8">
+                                        {{ celeb.get_full_name }}
+                                    </h6>
+                                </a>
+                                <p class="mb-0">Today</p>
+                            </div>
+                        </div>
+
+                    {% empty %}
+                        <h6 class="mt-5" style="margin-bottom: 20px"><i>...Sorry no birthdays today</i></h6>
+                    {% endfor %}
+                </div>
+            </div>
+
           </div>
+          <div class="modal fade" id="exampleModalCenteredScrollable" tabindex="-1" aria-labelledby="exampleModalCenteredScrollableTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenteredScrollableTitle" id="birthday_intro">Say Hi</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="text-center">
+                                    <div class="user-profile">
+                                        <img id="celebrant_image" src="/static/assets/images/avatars/01.png" alt="profile-img" class="rounded-pill avatar-155 img-fluid">
+                                    </div>
+                                    <div class="mt-3">
+                                        <h4 class="d-inline-block" id="celebrant_full_name">Ita Udoh</h4>
+                                        <p id="celebrant_nickname" style="margin-top: 15px;">
+                                            (Hellosky)
+                                        </p>
+                                        <p id="celebrant_about">About me</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+          </div>
+
           <div class="col-lg-8">
              <div class="profile-content tab-content">
                <div id="profile-edit" class="tab-pane fade">
@@ -154,7 +212,7 @@
                                    <fieldset id="contact_information" class="row">
                                        <div class="form-group col-md-12">
                                            <label class="form-label" for="phoneNumber">Phone Number:</label>
-                                           <input type="text" class="form-control" id="phoneNumber" name="phone_number" placeholder="e.g. 09012345678" value="{{ user.phone_number }}">
+                                           <input type="text" class="form-control" id="phoneNumber" name="phone_number" placeholder="e.g. 09012345678" maxlength="20" value="{{ user.phone_number }}">
                                        </div>
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="email">Email: <sup style="color: red;">You can't change this</sup></label>
@@ -275,11 +333,11 @@
                                        </div>
                                        <div class="form-group col-md-6">
                                            <label class="form-label" for="years_of_study">Years of Study:</label>
-                                           <input type="number" min="1" max="10" class="form-control" id="years_of_study" name="years_of_study" value="{{ user.years_of_study|empty_space_if_none }}">
+                                           <input type="number" min="1" max="10" maxlength="20" class="form-control" id="years_of_study" name="years_of_study" value="{{ user.years_of_study|empty_space_if_none }}">
                                        </div>
                                        <div class="form-group col-md-12">
                                            <label class="form-label" for="current_year_of_study">Current Year of Study:</label>
-                                           <input type="number" min="1" max="10" class="form-control" id="current_year_of_study" name="current_year_of_study" value="{{ user.current_year_of_study|empty_space_if_none }}">
+                                           <input type="number" min="1" max="10" maxlength="20" class="form-control" id="current_year_of_study" name="current_year_of_study" value="{{ user.current_year_of_study|empty_space_if_none }}">
                                        </div>
                                        <div class="form-group col-md-12">
                                            <label class="form-label" for="final_year_status">Final Year Status <i><small>(Update when appropriate)</small></i>:</label>

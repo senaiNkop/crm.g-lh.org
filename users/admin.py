@@ -18,7 +18,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ('gender', 'country', 'state', 'lga', 'course_of_study', 'occupation', 'skills')
     search_fields = ('first_name', 'last_name', 'country', 'state', 'shepherd')
     date_hierarchy = 'date_of_birth'
-    inlines = (PermissionInline, )
+    # inlines = (PermissionInline, )
 
     fieldsets = [
         ("Bio Data", {

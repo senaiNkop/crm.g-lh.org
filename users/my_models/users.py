@@ -85,10 +85,25 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
     def get_shepherd_sheep(self, shepherd):
+        """
+        Returns the users who have this user as their shepherd
+        """
         return self.get_queryset().filter(shepherd=shepherd)
 
     def get_sub_shepherd_sheep(self, sub_shepherd):
+        """
+        Return the users who have this user as their sub shepherd
+        """
         return self.get_queryset().filter(sub_shepherd=sub_shepherd)
+
+    def get_today_birthday(self):
+        """
+        Return all the users whose birthday is today
+        """
+        today = datetime.date.today()
+        celebrants = self.get_queryset().filter(date_of_birth__month=today.month, date_of_birth__day=today.day)
+
+        return celebrants
 
 
 class CustomUser(AbstractUser):
@@ -113,7 +128,7 @@ class CustomUser(AbstractUser):
     # BASIC MEDICAL INFORMATION
     blood_group = models.CharField(_("Blood Group"), max_length=10, choices=BLOOD_GROUP_CHOICES)
     genotype = models.CharField(_("Genotype"), max_length=10, choices=GENOTYPE_CHOICES)
-    chronic_illness = models.CharField(_("Any Chronic Ailment"), max_length=100, help_text="please specify", blank=True, null=True)
+    chronic_illness = models.CharField(_("Any Chronic Ailment"), max_length=200, help_text="please specify", blank=True, null=True)
 
     # RESIDENTIAL INFORMATION
     lga = models.CharField(_("LGA"), max_length=300, blank=True, null=True)
@@ -124,7 +139,7 @@ class CustomUser(AbstractUser):
     course_of_study = models.CharField(_("Course of Study"), max_length=255, blank=True, null=True)
     years_of_study = models.CharField(_("No of Years of Study"), max_length=20, blank=True, null=True)
     current_year_of_study = models.CharField(_("Current Year of Study"), max_length=20, blank=True, null=True)
-    final_year_status = models.CharField(_("Final Year Status"), max_length=20, help_text=_("Update when appropriate"), blank=True, null=True)
+    final_year_status = models.CharField(_("Final Year Status"), max_length=255, help_text=_("Update when appropriate"), blank=True, null=True)
 
     # NEXT OF KIN INFORMATION
     next_of_kin_full_name = models.CharField(_('Full Name'), max_length=200, blank=True, null=True)
